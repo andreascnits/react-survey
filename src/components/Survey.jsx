@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SurveyForm from "./SurveyForm";
 import AnswersList from "./AnswersList";
 
@@ -13,6 +13,16 @@ function Survey() {
   });
   const [answersList, setAnswersList] = useState([]);
   const [editingIndex, setEditingIndex] = useState(null);
+
+  useEffect(() => {
+    fetchAnswers();
+  }, []);
+
+  const fetchAnswers = async () => {
+      const response = await fetch('http://localhost:3000/answers');
+      const data = await response.json();
+      setAnswersList(data);
+  };
 
   const resetForm = () => {
     setFormData({
@@ -43,19 +53,43 @@ function Survey() {
     });
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+    
     if (editingIndex !== null) {
-      setAnswersList(prev => {
-        const newList = [...prev];
-        newList[editingIndex] = formData;
-        return newList;
-      });
+      try {
+        const response = await fetch(`http://localhost:3000/answers/${answersList[editingIndex].id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+        if (response.ok) {
+          fetchAnswers();
+        }
+      } catch (error) {
+        console.error('Error updating answer:', error);
+      }
     } else {
-      setAnswersList(prev => [...prev, formData]);
+      try {
+        const response = await fetch('http://localhost:3000/answers', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+        if (response.ok) {
+          fetchAnswers();
+        }
+      } catch (error) {
+        console.error('Error creating answer:', error);
+      }
     }
+    
     resetForm();
-  }
+  };
 
   const handleStartEdit = (index) => {
     setEditingIndex(index);

@@ -1,0 +1,25 @@
+{
+  "answers": [
+    {
+      "id": "1fbe",
+      "colour": "3",
+      "time": [
+        "chatting",
+        "bathing"
+      ],
+      "review": "I love my rubber duck, but it could be another shade of yellow!",
+      "username": "I dont feel like it",
+      "email": "okthen@andreas.no"
+    },
+    {
+      "id": "0d4c",
+      "colour": "2",
+      "time": [
+        "I dont"
+      ],
+      "review": "Too rubbery",
+      "username": "Andreas",
+      "email": "andreas@andreas.no"
+    }
+  ]
+}
